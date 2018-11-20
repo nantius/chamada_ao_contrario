@@ -22,12 +22,18 @@ class Pessoa(models.Model):
 class Professor(Pessoa):
     titulacao = models.CharField(max_length=50)
 
+    def __str__(self):
+        return f"{self.matricula} - {self.user.first_name}"
+
 
 class Turma(models.Model):
     professor = models.ForeignKey(Professor, on_delete=models.DO_NOTHING, related_name="turma")
     turno = models.CharField(max_length=1)
     periodo = models.IntegerField()
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, related_name="turma")
+
+    def __str__(self):
+        return f"{self.disciplina.nome} - {self.turno} - {self.professor.user.professor.matricula}"
 
 
 class Curso(models.Model):
@@ -42,7 +48,7 @@ class Curso(models.Model):
 
 class Aluno(Pessoa):
     turmas = models.ManyToManyField(Turma, through='Turma_Aluno')
-    curso = models.ForeignKey(Curso, on_delete=models.DO_NOTHING, related_name="aluno")
+    curso = models.ForeignKey(Curso, on_delete=models.DO_NOTHING, null=True, related_name="aluno")
 
     def __str__(self):
         return f"{self.matricula} - {self.user.first_name}"
@@ -54,7 +60,7 @@ class Turma_Aluno(models.Model):
 
 
 class Chamada(models.Model):
-    presenca = models.BooleanField
-    data = models.DateField
+    presenca = models.BooleanField()
+    data = models.DateField()
     turma_aluno = models.ForeignKey(Turma_Aluno, on_delete=models.CASCADE)
 
