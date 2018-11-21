@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+
+    {% if turmas %}
+        <h1>Turmas</h1>
+        {% for turma in turmas %}
+            <h2>{{ turma.disciplina }}</h2>
+            <h3>{{ turma.periodo  }}°/{{ turma.ano }}</h3>
+            <hr/>
+        {% endfor %}
+
+    {% else  %}
+        <h1>Você não possui turmas ainda.</h1>
+    {% endif %}
+
+
+
+{% endblock %}
+
+
+

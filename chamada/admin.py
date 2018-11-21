@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Aluno, Disciplina, Curso, Professor, Chamada, Turma, Turma_Aluno
+from .models import Aluno, Disciplina, Curso, Professor, Chamada, Turma, TurmaAluno
 
 # Register your models here.
 
 
 class TurmaAlunoInline(admin.TabularInline):
-    model = Turma_Aluno
+    model = TurmaAluno
     extra = 5
 
 class AlunoAdmin(admin.ModelAdmin):

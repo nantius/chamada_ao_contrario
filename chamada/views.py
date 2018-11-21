@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
+from chamada.models import Turma, Professor
 
 # Create your views here.
 
@@ -47,3 +48,26 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'users/signup.html', {'form': form})
+
+def professor_chamada(request):
+
+    # Verifica se o usuário é um professor
+    professor = Professor.objects.filter(user_id=request.user.id)
+
+    # Caso não seja um professor manda para a página principal
+    if not professor:
+        return redirect('index')
+
+    # Puxando as turmas onde este professor é o encarregado
+    turmas = Turma.objects.filter(professor__user_id=request.user.id)
+
+    if turmas:
+        context = {
+            'turmas': turmas
+        }
+    else:
+        context = {
+            turmas: 'vazio'
+        }
+
+    return render(request, 'professor/chamadas.html', context)

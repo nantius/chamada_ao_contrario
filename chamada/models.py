@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 from django.contrib.auth.models import User
 
 
@@ -31,6 +32,7 @@ class Turma(models.Model):
     turno = models.CharField(max_length=1)
     periodo = models.IntegerField()
     disciplina = models.ForeignKey(Disciplina, on_delete=models.CASCADE, related_name="turma")
+    ano = models.IntegerField(default=datetime.date.today().year)
 
     def __str__(self):
         return f"{self.disciplina.nome} - {self.turno} - {self.professor.user.professor.matricula}"
@@ -47,20 +49,25 @@ class Curso(models.Model):
 
 
 class Aluno(Pessoa):
-    turmas = models.ManyToManyField(Turma, through='Turma_Aluno')
+    turmas = models.ManyToManyField(Turma, through='TurmaAluno')
     curso = models.ForeignKey(Curso, on_delete=models.DO_NOTHING, null=True, related_name="aluno")
 
     def __str__(self):
         return f"{self.matricula} - {self.user.first_name}"
 
 
-class Turma_Aluno(models.Model):
+class TurmaAluno(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     turma = models.ForeignKey(Turma, on_delete=models.CASCADE)
 
 
 class Chamada(models.Model):
-    presenca = models.BooleanField()
+    ativa = models.BooleanField()
     data = models.DateField()
-    turma_aluno = models.ForeignKey(Turma_Aluno, on_delete=models.CASCADE)
+    turma_aluno = models.ManyToManyField(TurmaAluno, through='Presenca')
 
+
+class Presenca(models.Model):
+    presenca = models.BooleanField()
+    turma_aluno = models.ForeignKey(TurmaAluno, on_delete=models.DO_NOTHING)
+    chamada = models.ForeignKey(Chamada, on_delete=models.DO_NOTHING)
