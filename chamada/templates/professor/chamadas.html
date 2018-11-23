@@ -2,8 +2,36 @@
 
 {% block body %}
 
-
     {% if turmas %}
+
+        <h2>Nova chamada</h2>
+
+        <form method="post" action="{% url 'nova_chamada' %}">
+            {% csrf_token %}
+            <select name="turma">
+                {% for turma in turmas %}
+                    <option value="{{ turma.id }}">{{ turma.disciplina }}</option>
+                {% endfor %}
+            </select>
+            <button>Criar</button>
+        </form>
+
+        <hr/>
+
+        {% if chamadas %}
+
+            <h2>Chamadas</h2>
+
+            {% for chamada in chamadas %}
+                <div>
+                    {{ chamada.id }}
+                </div>
+            {% endfor %}
+
+
+            <hr/>
+        {% endif %}
+
         <h1>Turmas</h1>
         {% for turma in turmas %}
             <h2>{{ turma.disciplina }}</h2>
@@ -14,8 +42,6 @@
     {% else  %}
         <h1>Você não possui turmas ainda.</h1>
     {% endif %}
-
-
 
 {% endblock %}
 

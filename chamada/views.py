@@ -1,8 +1,10 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,  JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from chamada.models import Turma, Professor
+from chamada.models import Turma, Professor, TurmaAluno, Chamada, Presenca
+from django.utils import timezone
+import datetime
 
 # Create your views here.
 
@@ -61,13 +63,42 @@ def professor_chamada(request):
     # Puxando as turmas onde este professor é o encarregado
     turmas = Turma.objects.filter(professor__user_id=request.user.id)
 
+    # Puxando chamadas ativas
+    chamadas = Chamada.objects.filter(ativa=True)
+
+    context = {}
+
+    if chamadas:
+        context['chamadas'] = chamadas
+
     if turmas:
-        context = {
-            'turmas': turmas
-        }
-    else:
-        context = {
-            turmas: 'vazio'
-        }
+        context['turmas'] = turmas
 
     return render(request, 'professor/chamadas.html', context)
+
+
+def nova_chamada(request):
+
+    if request.method != 'POST':
+        return redirect('index')
+
+    # Resgatando valor enviado por post
+    turma_id = request.POST["turma"]
+
+    # Pegando todas as referencias para alunos
+    turmas = TurmaAluno.objects.filter(turma_id=turma_id)
+
+    # Criação da chamada
+    chamada = Chamada(data=timezone.now(), ativa=True)
+    chamada.save()
+
+    # Criação da presença
+    for turma in turmas:
+        presenca = Presenca(turma_aluno=turma, chamada=chamada, presenca=False)
+        presenca.save()
+
+    return redirect('professor_chamada')
+
+    #response = JsonResponse({'turma': list(turmas)})
+    #response.status_code = 200
+    #return response

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 import datetime
 from django.contrib.auth.models import User
 
@@ -62,8 +63,8 @@ class TurmaAluno(models.Model):
 
 
 class Chamada(models.Model):
-    ativa = models.BooleanField()
-    data = models.DateField()
+    ativa = models.BooleanField(default=True)
+    data = models.DateField(default=timezone.now())
     turma_aluno = models.ManyToManyField(TurmaAluno, through='Presenca')
 
 
