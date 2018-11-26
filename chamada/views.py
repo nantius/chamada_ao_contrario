@@ -36,7 +36,7 @@ def logout_view(request):
     logout(request)
     return render(request, "users/login.html", {"message": "Logged out."})
 
-
+# Função de registro
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -77,6 +77,29 @@ def professor_chamada(request):
     return render(request, 'professor/chamadas.html', context)
 
 
+def aluno_chamada(request):
+
+    # Busca todas as presenças de chamadas ativas, deste aluno e que ainda não foram marcadas presente
+    turmas = Presenca.objects.filter(chamada__ativa=True, turma_aluno__aluno__user_id__exact=request.user.id, presenca=False).distinct()
+
+    context = {}
+
+    if turmas:
+        context['presencas'] = turmas
+
+    return render(request, 'chamadas.html', context)
+
+
+def desativar_chamada(request, id):
+    Chamada.objects.filter(id=id).update(ativa=False)
+    return redirect('professor_chamada')
+
+
+def marcar_presenca(request, id):
+    Presenca.objects.filter(id=id).update(presenca=True)
+    return redirect('aluno_chamada')
+
+
 def nova_chamada(request):
 
     if request.method != 'POST':
@@ -99,6 +122,3 @@ def nova_chamada(request):
 
     return redirect('professor_chamada')
 
-    #response = JsonResponse({'turma': list(turmas)})
-    #response.status_code = 200
-    #return response

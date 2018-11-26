@@ -24,7 +24,7 @@
 
             {% for chamada in chamadas %}
                 <div>
-                    {{ chamada.id }}
+                    {{ chamada.turma_aluno.first.turma.disciplina.nome }} - <a href="{% url 'desativar_chamada' chamada.id %}">desativar</a>
                 </div>
             {% endfor %}
 

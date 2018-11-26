@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    {% if presencas %}
+
+
+            <h2>Chamadas</h2>
+
+            {% for presenca in presencas %}
+                <div>
+                    {{presenca.id}} - <a href="{% url 'marcar_presenca' presenca.id %}">Marcar Presença</a>
+                </div>
+            {% endfor %}
+
+
+            <hr/>
+
+    {% endif %}
+
+
+
+{% endblock %}
+
+
+
