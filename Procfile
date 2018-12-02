@@ -1,1 +1,1 @@
-web: gunicorn chamada_sovietica.wsgi
+web: gunicorn chamada_sovietica.wsgi --log-file -
