@@ -10,10 +10,20 @@ import datetime
 
 
 def index(request):
+
     if request.user.is_authenticated:
+        # Verifica se o usuário é um professor ou aluno
+        professor = Professor.objects.filter(user_id=request.user.id)
+
         context = {
             "user": request.user
         }
+
+        if professor:
+            context['professor'] = True
+        else:
+            context['professor'] = False
+
         return render(request, "index.html", context)
     return render(request, "index.html")
 
