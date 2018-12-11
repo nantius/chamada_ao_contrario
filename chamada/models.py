@@ -61,11 +61,17 @@ class TurmaAluno(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     turma = models.ForeignKey(Turma, on_delete=models.CASCADE, related_name="turma")
 
+    def __str__(self):
+        return f"{self.aluno}"
+
 
 class Chamada(models.Model):
     ativa = models.BooleanField(default=True)
     data = models.DateField(default=timezone.now())
     turma_aluno = models.ManyToManyField(TurmaAluno, through='Presenca', related_name="turma_aluno")
+
+    def __str__(self):
+        return f"{self.turma_aluno.first().turma.disciplina.nome} - {self.turma_aluno.first().turma.professor.matricula} - {self.data}"
 
 
 class Presenca(models.Model):

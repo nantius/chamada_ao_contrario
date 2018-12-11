@@ -71,10 +71,10 @@ def professor_chamada(request):
         return redirect('index')
 
     # Puxando as turmas onde este professor é o encarregado
-    turmas = Turma.objects.filter(professor__user_id=request.user.id)
+    turmas = Turma.objects.filter(professor_id=professor[0].id)
 
     # Puxando chamadas ativas
-    chamadas = Chamada.objects.filter(ativa=True)
+    chamadas = Chamada.objects.filter(ativa=True, turma_aluno__turma__professor_id=professor[0].id)
 
     context = {}
 

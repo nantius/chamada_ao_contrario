@@ -9,7 +9,7 @@
 
             {% for presenca in presencas %}
                 <div>
-                    {{presenca.id}} - <a href="{% url 'marcar_presenca' presenca.id %}">Marcar Presença</a>
+                    {{presenca.turma_aluno.turma.disciplina.nome}} - <a href="{% url 'marcar_presenca' presenca.id %}">Marcar Presença</a>
                 </div>
             {% endfor %}
 

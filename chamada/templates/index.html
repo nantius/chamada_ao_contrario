@@ -10,7 +10,6 @@
             {% if professor %}
                 <a href="{% url 'professor_chamada' %}">Chamadas</a>
             {% else %}
-                        <h2> oi {{ user }}</h2>
                 <a href="{% url 'aluno_chamada' %}">Chamadas</a>
             {% endif %}
     {% endif %}
